@@ -31,16 +31,13 @@ public class Group {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = false;
     
-    // Связь One-to-Many с Student
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Student> students;
     
-    // Связь Many-to-One с Department
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
     
-    // Конструкторы
     public Group() {}
     
     public Group(String name, String description, Integer year) {
@@ -49,7 +46,6 @@ public class Group {
         this.year = year;
     }
     
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -106,7 +102,6 @@ public class Group {
         this.department = department;
     }
     
-    // Методы для логического удаления
     public void softDelete() {
         this.deleted = true;
     }
