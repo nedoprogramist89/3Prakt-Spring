@@ -20,7 +20,6 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
     
-    // CRUD операции
     public Course save(Course course) {
         return courseRepository.save(course);
     }
@@ -41,7 +40,6 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
     
-    // Поиск и фильтрация
     public Page<Course> searchCourses(String name, String description, Integer credits, 
                                      Integer hours, Long departmentId, Boolean includeDeleted,
                                      int page, int size, String sortBy, String sortDir) {
@@ -52,7 +50,6 @@ public class CourseService {
                                                 departmentId, includeDeleted, pageable);
     }
     
-    // Логическое удаление
     public void softDelete(Long id) {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
@@ -79,7 +76,6 @@ public class CourseService {
         courseRepository.deleteAllById(ids);
     }
     
-    // Статистика
     public long count() {
         return courseRepository.countByDeletedFalse();
     }
@@ -88,12 +84,10 @@ public class CourseService {
         return courseRepository.countByDepartmentIdAndDeletedFalse(departmentId);
     }
     
-    // Поиск по факультету
     public List<Course> findByDepartment(Long departmentId) {
         return courseRepository.findByDepartmentIdAndDeletedFalse(departmentId);
     }
     
-    // Поиск по кредитам
     public List<Course> findByCredits(Integer credits) {
         return courseRepository.findByCreditsAndDeletedFalse(credits);
     }
