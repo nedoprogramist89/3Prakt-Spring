@@ -20,7 +20,6 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     
-    // CRUD операции
     public Student save(Student student) {
         return studentRepository.save(student);
     }
@@ -41,7 +40,6 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
     
-    // Поиск и фильтрация
     public Page<Student> searchStudents(String firstName, String lastName, String middleName, 
                                        String email, Long groupId, Boolean includeDeleted,
                                        int page, int size, String sortBy, String sortDir) {
@@ -52,7 +50,6 @@ public class StudentService {
                                                  email, groupId, includeDeleted, pageable);
     }
     
-    // Логическое удаление
     public void softDelete(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
@@ -79,7 +76,6 @@ public class StudentService {
         studentRepository.deleteAllById(ids);
     }
     
-    // Статистика
     public long count() {
         return studentRepository.countByDeletedFalse();
     }
@@ -88,12 +84,10 @@ public class StudentService {
         return studentRepository.countByGroupIdAndDeletedFalse(groupId);
     }
     
-    // Поиск по группе
     public List<Student> findByGroup(Long groupId) {
         return studentRepository.findByGroupIdAndDeletedFalse(groupId);
     }
     
-    // Поиск по email
     public Optional<Student> findByEmail(String email) {
         return Optional.ofNullable(studentRepository.findByEmailAndDeletedFalse(email));
     }
