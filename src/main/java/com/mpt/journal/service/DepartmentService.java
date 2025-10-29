@@ -20,7 +20,6 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
     
-    // CRUD операции
     public Department save(Department department) {
         return departmentRepository.save(department);
     }
@@ -41,7 +40,6 @@ public class DepartmentService {
         departmentRepository.deleteById(id);
     }
     
-    // Поиск и фильтрация
     public Page<Department> searchDepartments(String name, String description, String address, 
                                              String phone, Boolean includeDeleted,
                                              int page, int size, String sortBy, String sortDir) {
@@ -52,7 +50,6 @@ public class DepartmentService {
                                                     includeDeleted, pageable);
     }
     
-    // Логическое удаление
     public void softDelete(Long id) {
         Optional<Department> department = departmentRepository.findById(id);
         if (department.isPresent()) {
@@ -79,12 +76,10 @@ public class DepartmentService {
         departmentRepository.deleteAllById(ids);
     }
     
-    // Статистика
     public long count() {
         return departmentRepository.countByDeletedFalse();
     }
     
-    // Поиск по названию
     public Optional<Department> findByName(String name) {
         return Optional.ofNullable(departmentRepository.findByNameAndDeletedFalse(name));
     }
