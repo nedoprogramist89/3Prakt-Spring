@@ -48,16 +48,13 @@ public class Student {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = false;
     
-    // Связь Many-to-One с Group
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
     
-    // Связь One-to-One с StudentProfile
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private StudentProfile profile;
     
-    // Связь Many-to-Many с Course
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "student_courses",
@@ -66,7 +63,6 @@ public class Student {
     )
     private List<Course> courses;
     
-    // Конструкторы
     public Student() {}
     
     public Student(String firstName, String lastName, String middleName, String email, String phone, LocalDate birthDate, String address) {
@@ -79,7 +75,6 @@ public class Student {
         this.address = address;
     }
     
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -176,7 +171,6 @@ public class Student {
         this.courses = courses;
     }
     
-    // Методы для логического удаления
     public void softDelete() {
         this.deleted = true;
     }
