@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     
-    // Поиск по различным параметрам
     @Query("SELECT c FROM Course c WHERE " +
            "(:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:description IS NULL OR LOWER(c.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
@@ -29,21 +28,15 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
                                   @Param("includeDeleted") Boolean includeDeleted,
                                   Pageable pageable);
     
-    // Поиск активных курсов
     List<Course> findByDeletedFalse();
     
-    // Поиск удаленных курсов
     List<Course> findByDeletedTrue();
     
-    // Поиск по факультету
     List<Course> findByDepartmentIdAndDeletedFalse(Long departmentId);
     
-    // Поиск по количеству кредитов
     List<Course> findByCreditsAndDeletedFalse(Integer credits);
     
-    // Подсчет активных курсов
     long countByDeletedFalse();
     
-    // Подсчет курсов в факультете
     long countByDepartmentIdAndDeletedFalse(Long departmentId);
 }
