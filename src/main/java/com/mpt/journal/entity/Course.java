@@ -34,16 +34,13 @@ public class Course {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = false;
     
-    // Связь Many-to-Many с Student
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private List<Student> students;
     
-    // Связь Many-to-One с Department
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
     
-    // Конструкторы
     public Course() {}
     
     public Course(String name, String description, Integer credits, Integer hours) {
@@ -53,7 +50,6 @@ public class Course {
         this.hours = hours;
     }
     
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -118,7 +114,6 @@ public class Course {
         this.department = department;
     }
     
-    // Методы для логического удаления
     public void softDelete() {
         this.deleted = true;
     }
