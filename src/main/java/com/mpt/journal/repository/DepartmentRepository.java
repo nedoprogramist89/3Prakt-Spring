@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
     
-    // Поиск по различным параметрам
     @Query("SELECT d FROM Department d WHERE " +
            "(:name IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:description IS NULL OR LOWER(d.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
@@ -27,15 +26,11 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
                                       @Param("includeDeleted") Boolean includeDeleted,
                                       Pageable pageable);
     
-    // Поиск активных факультетов
     List<Department> findByDeletedFalse();
     
-    // Поиск удаленных факультетов
     List<Department> findByDeletedTrue();
     
-    // Поиск по названию
     Department findByNameAndDeletedFalse(String name);
     
-    // Подсчет активных факультетов
     long countByDeletedFalse();
 }
