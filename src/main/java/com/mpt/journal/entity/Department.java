@@ -35,15 +35,12 @@ public class Department {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = false;
     
-    // Связь One-to-Many с Group
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Group> groups;
     
-    // Связь One-to-Many с Course
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses;
     
-    // Конструкторы
     public Department() {}
     
     public Department(String name, String description, String address, String phone) {
@@ -53,7 +50,6 @@ public class Department {
         this.phone = phone;
     }
     
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -118,7 +114,6 @@ public class Department {
         this.courses = courses;
     }
     
-    // Методы для логического удаления
     public void softDelete() {
         this.deleted = true;
     }
