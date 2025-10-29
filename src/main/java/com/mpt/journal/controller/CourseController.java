@@ -52,7 +52,6 @@ public class CourseController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
         
-        // Параметры поиска
         model.addAttribute("name", name);
         model.addAttribute("description", description);
         model.addAttribute("credits", credits);
