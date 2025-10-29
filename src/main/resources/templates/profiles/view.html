@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Профиль: ' + ${profile.student.lastName + ' ' + profile.student.firstName}">Профиль - Журнал студентов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>Журнал студентов
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">
+                            <i class="fas fa-users me-1"></i>Студенты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/groups">
+                            <i class="fas fa-layer-group me-1"></i>Группы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">
+                            <i class="fas fa-book me-1"></i>Курсы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/departments">
+                            <i class="fas fa-building me-1"></i>Факультеты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profiles">
+                            <i class="fas fa-user-circle me-1"></i>Профили
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span th:text="${profile.student.lastName + ' ' + profile.student.firstName + ' ' + (profile.student.middleName != null ? profile.student.middleName : '')}">
+                                Иванов Иван Иванович
+                            </span>
+                        </h4>
+                        <div>
+                            <a th:href="@{/profiles/edit/{id}(id=${profile.id})}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit me-1"></i>Редактировать
+                            </a>
+                            <button th:if="${!profile.deleted}" 
+                                    th:onclick="'softDelete(' + ${profile.id} + ')'" 
+                                    class="btn btn-secondary btn-sm">
+                                <i class="fas fa-trash-alt me-1"></i>Логическое удаление
+                            </button>
+                            <button th:if="${profile.deleted}" 
+                                    th:onclick="'restore(' + ${profile.id} + ')'" 
+                                    class="btn btn-success btn-sm">
+                                <i class="fas fa-undo me-1"></i>Восстановить
+                            </button>
+                            <button th:onclick="'hardDelete(' + ${profile.id} + ')'" 
+                                    class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash me-1"></i>Физическое удаление
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-user me-2"></i>Информация о студенте
+                                </h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td class="fw-bold">ID профиля:</td>
+                                        <td th:text="${profile.id}">1</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Студент:</td>
+                                        <td th:text="${profile.student.lastName + ' ' + profile.student.firstName + ' ' + (profile.student.middleName != null ? profile.student.middleName : '')}">Иванов Иван Иванович</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Email:</td>
+                                        <td th:text="${profile.student.email != null ? profile.student.email : 'Не указан'}">ivan@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Телефон:</td>
+                                        <td th:text="${profile.student.phone != null ? profile.student.phone : 'Не указан'}">+7 (999) 123-45-67</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Дополнительная информация
+                                </h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td class="fw-bold">Дата создания:</td>
+                                        <td th:text="${profile.createdDate != null ? #temporals.format(profile.createdDate, 'dd.MM.yyyy') : 'Не указана'}">01.01.2024</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Статус:</td>
+                                        <td>
+                                            <span th:if="${profile.deleted}" class="badge bg-danger">Удален</span>
+                                            <span th:unless="${profile.deleted}" class="badge bg-success">Активен</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-file-text me-2"></i>Биография
+                                </h5>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <p th:text="${profile.biography != null ? profile.biography : 'Биография не указана'}" class="mb-0">
+                                            Биография студента...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-heart me-2"></i>Хобби
+                                </h5>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <p th:text="${profile.hobbies != null ? profile.hobbies : 'Хобби не указаны'}" class="mb-0">
+                                            Хобби студента...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-trophy me-2"></i>Достижения
+                                </h5>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <p th:text="${profile.achievements != null ? profile.achievements : 'Достижения не указаны'}" class="mb-0">
+                                            Достижения студента...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-phone-alt me-2"></i>Экстренные контакты
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Контактное лицо</h6>
+                                                <p th:text="${profile.emergencyContact != null ? profile.emergencyContact : 'Не указано'}" class="card-text">
+                                                    Имя контакта
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Телефон</h6>
+                                                <p th:text="${profile.emergencyPhone != null ? profile.emergencyPhone : 'Не указан'}" class="card-text">
+                                                    +7 (999) 123-45-67
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/profiles" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-1"></i>Назад к списку
+                                    </a>
+                                    <div>
+                                        <a th:href="@{/profiles/edit/{id}(id=${profile.id})}" class="btn btn-primary">
+                                            <i class="fas fa-edit me-1"></i>Редактировать
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Формы для операций удаления -->
+    <form id="softDeleteForm" method="post" style="display: none;">
+        <input type="hidden" name="id" id="softDeleteId">
+    </form>
+    
+    <form id="restoreForm" method="post" style="display: none;">
+        <input type="hidden" name="id" id="restoreId">
+    </form>
+    
+    <form id="hardDeleteForm" method="post" style="display: none;">
+        <input type="hidden" name="id" id="hardDeleteId">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function softDelete(id) {
+            if (confirm('Вы уверены, что хотите выполнить логическое удаление этого профиля?')) {
+                document.getElementById('softDeleteId').value = id;
+                document.getElementById('softDeleteForm').action = '/profiles/soft-delete/' + id;
+                document.getElementById('softDeleteForm').submit();
+            }
+        }
+
+        function restore(id) {
+            if (confirm('Вы уверены, что хотите восстановить этот профиль?')) {
+                document.getElementById('restoreId').value = id;
+                document.getElementById('restoreForm').action = '/profiles/restore/' + id;
+                document.getElementById('restoreForm').submit();
+            }
+        }
+
+        function hardDelete(id) {
+            if (confirm('ВНИМАНИЕ! Это действие необратимо. Вы уверены, что хотите физически удалить этот профиль?')) {
+                document.getElementById('hardDeleteId').value = id;
+                document.getElementById('hardDeleteForm').action = '/profiles/delete/' + id;
+                document.getElementById('hardDeleteForm').submit();
+            }
+        }
+    </script>
+</body>
+</html>

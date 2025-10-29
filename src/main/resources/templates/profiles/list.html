@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профили студентов - Журнал студентов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>Журнал студентов
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">
+                            <i class="fas fa-users me-1"></i>Студенты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/groups">
+                            <i class="fas fa-layer-group me-1"></i>Группы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">
+                            <i class="fas fa-book me-1"></i>Курсы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/departments">
+                            <i class="fas fa-building me-1"></i>Факультеты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profiles">
+                            <i class="fas fa-user-circle me-1"></i>Профили
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="fas fa-user-circle me-2"></i>Профили студентов</h2>
+                <p class="text-muted">Дополнительная информация о студентах</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/profiles/add" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i>Добавить профиль
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Список профилей
+                    <span class="badge bg-primary ms-2" th:text="${totalElements}">0</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Студент</th>
+                                <th>Биография</th>
+                                <th>Хобби</th>
+                                <th>Достижения</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="profile : ${profiles}">
+                                <td th:text="${profile.id}">1</td>
+                                <td>
+                                    <strong th:if="${profile.student != null}" 
+                                            th:text="${profile.student.lastName + ' ' + profile.student.firstName}">
+                                        Иванов Иван
+                                    </strong>
+                                    <span th:unless="${profile.student != null}" class="text-muted">Не указан</span>
+                                </td>
+                                <td th:text="${profile.biography != null ? (#strings.length(profile.biography) > 50 ? #strings.substring(profile.biography, 0, 50) + '...' : profile.biography) : 'Не указана'}">Биография</td>
+                                <td th:text="${profile.hobbies != null ? profile.hobbies : 'Не указаны'}">Хобби</td>
+                                <td th:text="${profile.achievements != null ? profile.achievements : 'Не указаны'}">Достижения</td>
+                                <td>
+                                    <span th:if="${profile.deleted}" class="badge bg-danger">Удален</span>
+                                    <span th:unless="${profile.deleted}" class="badge bg-success">Активен</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a th:href="@{/profiles/view/{id}(id=${profile.id})}" 
+                                           class="btn btn-sm btn-info" title="Просмотр">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a th:href="@{/profiles/edit/{id}(id=${profile.id})}" 
+                                           class="btn btn-sm btn-warning" title="Редактировать">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button th:if="${!profile.deleted}" 
+                                                th:onclick="'softDelete(' + ${profile.id} + ')'" 
+                                                class="btn btn-sm btn-secondary" title="Логическое удаление">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <button th:if="${profile.deleted}" 
+                                                th:onclick="'restore(' + ${profile.id} + ')'" 
+                                                class="btn btn-sm btn-success" title="Восстановить">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                        <button th:onclick="'hardDelete(' + ${profile.id} + ')'" 
+                                                class="btn btn-sm btn-danger" title="Физическое удаление">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(profiles)}">
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                                    <br>Профили не найдены
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function softDelete(id) {
+            if (confirm('Вы уверены, что хотите выполнить логическое удаление этого профиля?')) {
+                fetch('/profiles/soft-delete/' + id, {method: 'POST'})
+                    .then(() => location.reload());
+            }
+        }
+
+        function restore(id) {
+            if (confirm('Вы уверены, что хотите восстановить этот профиль?')) {
+                fetch('/profiles/restore/' + id, {method: 'POST'})
+                    .then(() => location.reload());
+            }
+        }
+
+        function hardDelete(id) {
+            if (confirm('ВНИМАНИЕ! Это действие необратимо. Вы уверены, что хотите физически удалить этот профиль?')) {
+                fetch('/profiles/delete/' + id, {method: 'POST'})
+                    .then(() => location.reload());
+            }
+        }
+    </script>
+</body>
+</html>
