@@ -37,12 +37,10 @@ public class StudentProfile {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted = false;
     
-    // Связь One-to-One с Student
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
     
-    // Конструкторы
     public StudentProfile() {}
     
     public StudentProfile(String biography, String hobbies, String achievements, String emergencyContact, String emergencyPhone) {
@@ -54,7 +52,6 @@ public class StudentProfile {
         this.createdDate = LocalDate.now();
     }
     
-    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -127,7 +124,6 @@ public class StudentProfile {
         this.student = student;
     }
     
-    // Методы для логического удаления
     public void softDelete() {
         this.deleted = true;
     }
