@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     
-    // Поиск по различным параметрам
     @Query("SELECT s FROM Student s WHERE " +
            "(:firstName IS NULL OR LOWER(s.firstName) LIKE LOWER(CONCAT('%', :firstName, '%'))) AND " +
            "(:lastName IS NULL OR LOWER(s.lastName) LIKE LOWER(CONCAT('%', :lastName, '%'))) AND " +
@@ -29,21 +28,15 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                                    @Param("includeDeleted") Boolean includeDeleted,
                                    Pageable pageable);
     
-    // Поиск активных студентов
     List<Student> findByDeletedFalse();
     
-    // Поиск удаленных студентов
     List<Student> findByDeletedTrue();
     
-    // Поиск по группе
     List<Student> findByGroupIdAndDeletedFalse(Long groupId);
     
-    // Поиск по email
     Student findByEmailAndDeletedFalse(String email);
     
-    // Подсчет активных студентов
     long countByDeletedFalse();
     
-    // Подсчет студентов в группе
     long countByGroupIdAndDeletedFalse(Long groupId);
 }
