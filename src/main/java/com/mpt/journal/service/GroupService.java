@@ -20,7 +20,6 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
     
-    // CRUD операции
     public Group save(Group group) {
         return groupRepository.save(group);
     }
@@ -41,7 +40,6 @@ public class GroupService {
         groupRepository.deleteById(id);
     }
     
-    // Поиск и фильтрация
     public Page<Group> searchGroups(String name, String description, Integer year, 
                                    Long departmentId, Boolean includeDeleted,
                                    int page, int size, String sortBy, String sortDir) {
@@ -52,7 +50,6 @@ public class GroupService {
                                                departmentId, includeDeleted, pageable);
     }
     
-    // Логическое удаление
     public void softDelete(Long id) {
         Optional<Group> group = groupRepository.findById(id);
         if (group.isPresent()) {
@@ -79,7 +76,6 @@ public class GroupService {
         groupRepository.deleteAllById(ids);
     }
     
-    // Статистика
     public long count() {
         return groupRepository.countByDeletedFalse();
     }
@@ -88,12 +84,10 @@ public class GroupService {
         return groupRepository.countByDepartmentIdAndDeletedFalse(departmentId);
     }
     
-    // Поиск по факультету
     public List<Group> findByDepartment(Long departmentId) {
         return groupRepository.findByDepartmentIdAndDeletedFalse(departmentId);
     }
     
-    // Поиск по году
     public List<Group> findByYear(Integer year) {
         return groupRepository.findByYearAndDeletedFalse(year);
     }
