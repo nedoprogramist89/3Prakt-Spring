@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
     
-    // Поиск по различным параметрам
     @Query("SELECT g FROM Group g WHERE " +
            "(:name IS NULL OR LOWER(g.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:description IS NULL OR LOWER(g.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
@@ -27,21 +26,15 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
                                  @Param("includeDeleted") Boolean includeDeleted,
                                  Pageable pageable);
     
-    // Поиск активных групп
     List<Group> findByDeletedFalse();
     
-    // Поиск удаленных групп
     List<Group> findByDeletedTrue();
     
-    // Поиск по факультету
     List<Group> findByDepartmentIdAndDeletedFalse(Long departmentId);
     
-    // Поиск по году
     List<Group> findByYearAndDeletedFalse(Integer year);
     
-    // Подсчет активных групп
     long countByDeletedFalse();
     
-    // Подсчет групп в факультете
     long countByDepartmentIdAndDeletedFalse(Long departmentId);
 }
