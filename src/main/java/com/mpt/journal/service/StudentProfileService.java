@@ -20,7 +20,6 @@ public class StudentProfileService {
     @Autowired
     private StudentProfileRepository studentProfileRepository;
     
-    // CRUD операции
     public StudentProfile save(StudentProfile profile) {
         return studentProfileRepository.save(profile);
     }
@@ -41,7 +40,6 @@ public class StudentProfileService {
         studentProfileRepository.deleteById(id);
     }
     
-    // Поиск и фильтрация
     public Page<StudentProfile> searchProfiles(String biography, String hobbies, String achievements,
                                                Boolean includeDeleted, int page, int size, 
                                                String sortBy, String sortDir) {
@@ -52,7 +50,6 @@ public class StudentProfileService {
                                                         includeDeleted, pageable);
     }
     
-    // Логическое удаление
     public void softDelete(Long id) {
         Optional<StudentProfile> profile = studentProfileRepository.findById(id);
         if (profile.isPresent()) {
@@ -79,12 +76,10 @@ public class StudentProfileService {
         studentProfileRepository.deleteAllById(ids);
     }
     
-    // Статистика
     public long count() {
         return studentProfileRepository.countByDeletedFalse();
     }
     
-    // Поиск по студенту
     public Optional<StudentProfile> findByStudentId(Long studentId) {
         return Optional.ofNullable(studentProfileRepository.findByStudentIdAndDeletedFalse(studentId));
     }
